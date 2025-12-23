@@ -3,13 +3,13 @@ let soundBuffers = [];
 let currentBuffer = null;
 let currentSource = null;
     const pitches = ['C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', 'A#4', 'B4'];
-    const cents = ['-50', '-40', '-30', '-20', '-10', '+-0', '10', '20', '30', '40'];
+    const cents = ['-50ct', '-40ct', '-30ct', '-20ct', '-10ct', '+-0ct', '10ct', '20ct', '30ct', '40ct'];
 
 async function loadAllSounds () {
 
     const promises = pitches.flatMap(pitch =>
         cents.map(async cent =>{
-            const res = await fetch(`./sounds/${pitch}/${pitch}${cent}.wav`);
+            const res = await fetch(`./${pitch}/${pitch}${cent}.wav`);
             if (!res.ok) throw new Error(`Not found: ${pitch}${cent}`);
             const arrayBuffer = await res.arrayBuffer();
             return await audioCtx.decodeAudioData(arrayBuffer);
