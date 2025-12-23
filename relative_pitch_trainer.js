@@ -2,11 +2,22 @@ const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 let soundBuffers = [];
 let currentBuffer = null;
 let currentSource = null;
-    const pitches = ['C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', 'A#4', 'B4'];
-    const cents = ['-50ct', '-40ct', '-30ct', '-20ct', '-10ct', '+-0ct', '+10ct', '+20ct', '+30ct', '+40ct'];
+const pitches = ['C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', 'A#4', 'B4'];
+const cents = ['-50ct', '-40ct', '-30ct', '-20ct', '-10ct', '+-0ct', '+10ct', '+20ct', '+30ct', '+40ct'];
+const statusText = document.getElementById('status');
+const randomBtn = document.getElementById('randomBtn');
+const againBtn = document.getElementById('againBtn');
+const playCBtn = document.getElementById('playCBtn');
+const answerBtn = document.getElementById('answerBtn');
+const usageBtn = document.getElementById('usageBtn');
+const answerLi = document.querySelector(`.answer`);
+
+function setButtonsEnabled(enabled) {
+    const buttons = [randomBtn, againBtn, playCBtn, answerBtn];
+    buttons.forEach(btn => btn.disabled = !enabled);
+};
 
 async function loadAllSounds () {
-
     const promises = pitches.flatMap(pitch =>
         cents.map(async cent =>{
             const res = await fetch(`./${pitch}${cent}.wav`);
@@ -24,7 +35,6 @@ function playSound(buffer) {
         try {
             currentSource.stop();
         } catch (e) {
-            console.log(`音声の停止に失敗しました: ${e}`);
         }
     }
     const source = audioCtx.createBufferSource();
@@ -39,18 +49,18 @@ function playSound(buffer) {
 
 loadAllSounds().then(buffers => {
     soundBuffers = buffers;
-    console.log("全ての音源のロードが完了しました");
-}).catch(err => console.error(`ロードエラー: ${err}`));
-
-
-const randomBtn = document.getElementById('randomBtn');
-const againBtn = document.getElementById('againBtn');
-const playCBtn = document.getElementById('playCBtn');
-const answerBtn = document.getElementById('answerBtn');
-const usageBtn = document.getElementById('usageBtn');
-const answerLi = document.querySelector(`.answer`);
+    statusText.textContent = "準備完了"
+    statusText.style.color = "green"
+    setButtonsEnabled(true);
+}).catch(err => {
+    console.error(`ロードエラー: ${err}`);
+    statusText.textContent = "ロードエラー"
+    statusText.style.color = "red"
+    setButtonsEnabled(false);
+    });
 
 randomBtn.addEventListener('click', () => {
+    if (soundBuffers.length === 0) return;
     const randomIndex = Math.floor(Math.random() * soundBuffers.length);
     currentBuffer = soundBuffers[randomIndex];
     answerLi.textContent = "";
@@ -58,17 +68,22 @@ randomBtn.addEventListener('click', () => {
 });
 
 againBtn.addEventListener('click', () => {
+    if (!currentBuffer) {
+        alert("まずはランダムに音を再生してください。");
+        return;
+    }
     playSound(currentBuffer);
 });
 
 playCBtn.addEventListener('click', () => {
     if (soundBuffers.length === 0) return;
-    playSound(soundBuffers[5]);
+    const CBuffer = soundBuffers[5];
+    playSound(CBuffer);
 });
 
 answerBtn.addEventListener('click', () => {
     if (!currentBuffer) {
-        alert("まずは音を再生してください。");
+        alert("まずはランダムに音を再生してください。");
         return;
     }
     const index = soundBuffers.indexOf(currentBuffer);
