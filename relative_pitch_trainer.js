@@ -63,8 +63,7 @@ againBtn.addEventListener('click', () => {
 
 playCBtn.addEventListener('click', () => {
     if (soundBuffers.length === 0) return;
-    currentBuffer = soundBuffers[5];
-    playSound(currentBuffer);
+    playSound(soundBuffers[5]);
 });
 
 answerBtn.addEventListener('click', () => {
