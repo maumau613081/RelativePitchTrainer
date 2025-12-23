@@ -9,7 +9,7 @@ async function loadAllSounds () {
 
     const promises = pitches.flatMap(pitch =>
         cents.map(async cent =>{
-            const res = await fetch(`./${pitch}${cent}ct.wav`);
+            const res = await fetch(`./${pitch}${cent}.wav`);
             if (!res.ok) throw new Error(`Not found: ${pitch}${cent}`);
             const arrayBuffer = await res.arrayBuffer();
             return await audioCtx.decodeAudioData(arrayBuffer);
