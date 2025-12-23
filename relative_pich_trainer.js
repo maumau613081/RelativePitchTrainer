@@ -48,7 +48,7 @@ const againBtn = document.getElementById('againBtn');
 const playCBtn = document.getElementById('playCBtn');
 const answerBtn = document.getElementById('answerBtn');
 const usageBtn = document.getElementById('usageBtn');
-const answerLi = document.querySelector(`.anwer`);
+const answerLi = document.querySelector(`.answer`);
 
 randomBtn.addEventListener('click', () => {
     const randomIndex = Math.floor(Math.random() * soundBuffers.length);
