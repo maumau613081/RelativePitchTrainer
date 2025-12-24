@@ -21,7 +21,7 @@ async function loadAllSounds () {
     const promises = pitches.flatMap(pitch =>
         cents.map(async cent =>{
             let filename = `${pitch}${cent}.wav`;
-            filename = filename.replace('#', '%23').replace('+', '%2B').replace(' ', '');
+            filename = filename.replace('#', '%23').replace('+', '%2B');
             const res = await fetch(`./${filename}`);
             if (!res.ok) throw new Error(`Not found: ${filename}`);
             const arrayBuffer = await res.arrayBuffer();
