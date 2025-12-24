@@ -20,8 +20,10 @@ function setButtonsEnabled(enabled) {
 async function loadAllSounds () {
     const promises = pitches.flatMap(pitch =>
         cents.map(async cent =>{
-            const res = await fetch(`./${pitch}${cent}.wav`);
-            if (!res.ok) throw new Error(`Not found: ${pitch}${cent}`);
+            let filename = `${pitch}${cent}.wav`;
+            filename = filename.replace('#', '%23').replace('+', '%2B').replace(' ', '');
+            const res = await fetch(`./${filename}`);
+            if (!res.ok) throw new Error(`Not found: ${filename}`);
             const arrayBuffer = await res.arrayBuffer();
             return await audioCtx.decodeAudioData(arrayBuffer);
         })
