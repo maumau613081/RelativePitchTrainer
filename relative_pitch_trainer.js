@@ -23,25 +23,18 @@ function setButtonsEnabled(enabled) {
 async function loadAllSounds() {
     const promises = pitches.flatMap(pitch =>
         cents.map(async cent => {
-            // ファイル名のベースを作成
             const baseName = `${pitch}${cent}`;
-            const extension = `.wav`; // 実際のファイルが .WAV ならここを書き換える
-            
-            // 重要: URLとして正しく読み込むためにエンコードする
-            // encodeURIComponentを使うと '#' は '%23' に、'+' は '%2B' に変換されます
-            // 例: 'C#4+10ct' -> 'C%234%2B10ct'
+            const extension = `.wav`;
             const fileNameForUrl = encodeURIComponent(baseName) + extension;
 
             try {
                 const res = await fetch(`./${fileNameForUrl}`);
                 if (!res.ok) {
-                    // 404などのエラー詳細を投げる
                     throw new Error(`${res.status} ${res.statusText}`);
                 }
                 const arrayBuffer = await res.arrayBuffer();
                 return await audioCtx.decodeAudioData(arrayBuffer);
             } catch (e) {
-                // どのファイルで失敗したかログに出す（デバッグ用）
                 console.error(`読み込み失敗: ${baseName}${extension} (URL: ${fileNameForUrl})`, e);
                 throw e;
             }
