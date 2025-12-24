@@ -51,15 +51,18 @@ function playSound(buffer) {
 
 loadAllSounds().then(buffers => {
     soundBuffers = buffers;
-    statusText.textContent = "準備完了"
-    statusText.style.color = "green"
+    if(statusText) {
+        statusText.textContent = "準備完了";
+        statusText.style.color = "green";
+    }
     setButtonsEnabled(true);
 }).catch(err => {
-    console.error(`ロードエラー: ${err}`);
-    statusText.textContent = "ロードエラー"
-    statusText.style.color = "red"
+    if(statusText) {
+        statusText.textContent = "ロードエラー (F12キーでコンソールを確認してください)";
+        statusText.style.color = "red";
+    }
     setButtonsEnabled(false);
-    });
+});
 
 randomBtn.addEventListener('click', () => {
     if (soundBuffers.length === 0) return;
