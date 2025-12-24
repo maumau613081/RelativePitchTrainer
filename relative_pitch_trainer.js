@@ -31,7 +31,7 @@ async function loadAllSounds() {
     const promises = pitches.flatMap(pitch =>
         cents.map(async cent => {
             const baseName = `${pitch}${cent}`;
-            const fileNameForUrl = encodeURIComponent(baseName) + extension;
+            const fileNameForUrl = baseName + extension;
             console.log(`読み込み中: ${baseName}${extension} (URL: ${fileNameForUrl})`);
 
             try {
