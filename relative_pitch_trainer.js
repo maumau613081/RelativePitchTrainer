@@ -3,7 +3,7 @@ let soundBuffers = [];
 let currentBuffer = null;
 let currentSource = null;
 
-const pitches = ['C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', 'A#4', 'B4'];
+const pitches = ['C4', 'C4#', 'D4', 'D4#', 'E4', 'F4', 'F4#', 'G4', 'G4#', 'A4', 'A4#', 'B4'];
 // 注意: ファイル名に「+」が含まれていない場合は、ここの「+」を削除してください
 const cents = ['-50ct', '-40ct', '-30ct', '-20ct', '-10ct', '+-0ct', '+10ct', '+20ct', '+30ct', '+40ct'];
 
