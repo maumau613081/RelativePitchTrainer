@@ -7,6 +7,7 @@ const playCBtn = document.getElementById('playCBtn');
 const answerBtn = document.getElementById('answerBtn');
 const usageBtn = document.getElementById('usageBtn');
 const answerLi = document.querySelector(`.answer`);
+
 //変数の定義
 let soundBuffers = [];
 let currentBuffer = null;
