@@ -12,8 +12,8 @@ const answerLi = document.querySelector(`.answer`);
 let soundBuffers = [];
 let currentBuffer = null;
 let currentSource = null;
-const pitches = ['C4', 'C4#', 'D4', 'D4#', 'E4', 'F4', 'F4#', 'G4', 'G4#', 'A4', 'A4#', 'B4'];
-const cents = ['-50ct', '-40ct', '-30ct', '-20ct', '-10ct', '+-0ct', '+10ct', '+20ct', '+30ct', '+40ct'];
+const pitches = ['C4', 'Csharp4', 'D4', 'D4sharp', 'E4', 'F4', 'Fsharp4', 'G4', 'Gsharp4', 'A4', 'A4sharp', 'B4'];
+const cents = ['minus50ct', 'minus40ct', 'minus30ct', 'minus20ct', 'minus10ct', 'plusminus0ct', 'plus10ct', 'plus20ct', 'plus30ct', 'plus40ct'];
 const extension = '.wav';
 
 
@@ -32,7 +32,7 @@ async function loadAllSounds() {
     const promises = pitches.flatMap(pitch =>
         cents.map(async cent => {
             const baseName = `${pitch}${cent}`;
-            const fileNameForUrl = baseName.replace(/#/g, '%23').replace(/\+/g, '%2B') + extension;
+            const fileNameForUrl = baseName + extension;
             console.log(`読み込み中: ${baseName}${extension} (URL: ${fileNameForUrl})`);
 
             try {
