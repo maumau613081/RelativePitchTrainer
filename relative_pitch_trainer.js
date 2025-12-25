@@ -122,7 +122,7 @@ answerBtn?.addEventListener('click', () => {
     const index = soundBuffers.indexOf(currentBuffer);
     const pitchIndex = Math.floor(index / cents.length);
     const centIndex = index % cents.length;
-    if (answerLi) answerLi.textContent = `答え : ${pitches[pitchIndex]} ${cents[centIndex]}`;
+    if (answerLi) answerLi.textContent = `答え : ${pitches[pitchIndex].replace('sharp', '#')} ${cents[centIndex].replace('plus', '+').replace('minus', '-')}`;
 });
 
 //使い方ボタン
