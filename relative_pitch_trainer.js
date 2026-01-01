@@ -1,6 +1,5 @@
 //html関連やオーディオを取得
 const audioCtx = new AudioContext();
-const statusText = document.getElementById('status');
 const randomBtn = document.getElementById('randomBtn');
 const againBtn = document.getElementById('againBtn');
 const playCBtn = document.getElementById('playCBtn');
@@ -8,121 +7,67 @@ const answerBtn = document.getElementById('answerBtn');
 const usageBtn = document.getElementById('usageBtn');
 const answerLi = document.querySelector(`.answer`);
 
-//変数の定義
-let soundBuffers = [];
-let currentBuffer = null;
-let currentSource = null;
-const pitches = ['C4', 'Csharp4', 'D4', 'D4sharp', 'E4', 'F4', 'Fsharp4', 'G4', 'Gsharp4', 'A4', 'A4sharp', 'B4'];
-const cents = ['minus50ct', 'minus40ct', 'minus30ct', 'minus20ct', 'minus10ct', 'plusminus0ct', 'plus10ct', 'plus20ct', 'plus30ct', 'plus40ct'];
-const extension = '.wav';
+const frequencies = [261.63, 269.29, 277.18, 285.30, 293.66, 302.27, 311.13, 320.24, 329.63, 339.29, 349.23, 359.46, 369.99, 380.84, 392.00, 403.48, 415.30, 427.47, 440.00, 452.89, 466.16, 479.82, 493.88, 508.35];
+const pitches = ['C4', 'C4+50ct', 'C#4', 'C#4+50ct', 'D4', 'D4+50ct', 'D#4', 'D#4+50ct', 'E4', 'E4+50ct', 'F4', 'F4+50ct', 'F#4', 'F#4+50ct', 'G4', 'G4+50ct', 'G#4', 'G#4+50ct', 'A4', 'A4+50ct', 'A#4', 'A#4+50ct', 'B4', 'B4+50ct'];
 
+let currentIndex = null;
 
-//ボタンのオン/オフの設定
-/**@param {boolean} enabled*/
-function setButtonsEnabled(enabled) {
-    const buttons = [randomBtn, againBtn, playCBtn, answerBtn];
-    buttons.forEach(btn => {
-        if (btn) {
-            btn.disabled = !enabled;
-        }
-    });
-}
-
-async function loadAllSounds() {
-    const promises = pitches.flatMap(pitch =>
-        cents.map(async cent => {
-            const baseName = `${pitch}${cent}`;
-            const fileNameForUrl = baseName + extension;
-            console.log(`読み込み中: ${baseName}${extension} (URL: ${fileNameForUrl})`);
-
-            try {
-                const res = await fetch(`./${fileNameForUrl}`);
-                if (!res.ok) {
-                    throw new Error(`${res.status} ${res.statusText}`);
-                }
-                const arrayBuffer = await res.arrayBuffer();
-                return await audioCtx.decodeAudioData(arrayBuffer);
-            } catch (e) {
-                console.error(`読み込み失敗: ${baseName}${extension} (URL: ${fileNameForUrl})`, e);
-                throw e;
-            }
-        })
-    );
-    return Promise.all(promises);
-}
-
-//音を再生
-/**@param {AudioBuffer} buffer*/
-function playSound(buffer) {
-    if (!buffer) return;
-    if (currentSource) {
-        try {
-            currentSource.stop();
-        } catch (e) {}
-    }
-    const source = audioCtx.createBufferSource();
-    source.buffer = buffer;
-    source.connect(audioCtx.destination);
-    
+function playTone(index) {
+    if (index < 0 || index >= frequencies.length) return;
     if (audioCtx.state === 'suspended') {
         audioCtx.resume();
     }
-    source.start(0);
-    currentSource = source;
-}
 
-//初期化
-loadAllSounds().then(buffers => {
-    soundBuffers = buffers;
-    if(statusText) {
-        statusText.textContent = "準備完了";
-        statusText.style.color = "green";
-    }
-    setButtonsEnabled(true);
-}).catch(err => {
-    if(statusText) {
-        statusText.textContent = "ロードエラー (opt + cmd + Cキーでコンソールを確認してください)";
-        statusText.style.color = "red";
-    }
-    setButtonsEnabled(false);
-});
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    oscillator.type = 'sine';
+    oscillator.frequency.setValueAtTime(frequencies[index], audioCtx.currentTime);
+
+    gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+    gainNode.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + 0.05);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.0);
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    oscillator.start();
+    oscillator.stop(audioCtx.currentTime + 1.0);
+
+    oscillator.onended = () => {
+        gainNode.disconnect();
+        oscillator.disconnect();
+    };
+}
 
 //ランダムボタン
 randomBtn?.addEventListener('click', () => {
-    if (soundBuffers.length === 0) return;
-    const randomIndex = Math.floor(Math.random() * soundBuffers.length);
-    currentBuffer = soundBuffers[randomIndex];
+    currentIndex = Math.floor(Math.random() * frequencies.length);
     if (answerLi) answerLi.textContent = "";
-    playSound(currentBuffer);
+    playTone(currentIndex);
 });
 
 //再再生ボタン
 againBtn?.addEventListener('click', () => {
-    if (!currentBuffer) {
+    if (currentIndex === null) {
         alert("まずはランダムに音を再生してください。");
         return;
     }
-    playSound(currentBuffer);
+    playTone(currentIndex);
 });
 
 //C再生ボタン
 playCBtn?.addEventListener('click', () => {
-    if (soundBuffers.length === 0) return;
-    //pitchのC4の配列は最初の12この中,centでは6番目であるからインデックスは5番目
-    const CBuffer = soundBuffers[5];
-    playSound(CBuffer);
+    playTone(0);
 });
 
 //回答表示ボタン
 answerBtn?.addEventListener('click', () => {
-    if (!currentBuffer) {
+    if (currentIndex === null) {
         alert("まずはランダムに音を再生してください。");
         return;
     }
-    const index = soundBuffers.indexOf(currentBuffer);
-    const pitchIndex = Math.floor(index / cents.length);
-    const centIndex = index % cents.length;
-    if (answerLi) answerLi.textContent = `答え : ${pitches[pitchIndex].replace('sharp', '#')} ${cents[centIndex].replace('plus', '+').replace('minus', '-')}`;
+    const answerText = pitches[currentIndex];
+    if (answerLi) answerLi.textContent = `答え: ${answerText}`;
 });
 
 //使い方ボタン
