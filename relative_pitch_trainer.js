@@ -6,6 +6,7 @@ const audioCtx = new AudioContext();
 const randomBtn = document.getElementById('randomBtn');
 const againBtn = document.getElementById('againBtn');
 const playCBtn = document.getElementById('playCBtn');
+const autoToggle = document.getElementById('audoToggle')
 const answerBtn = document.getElementById('answerBtn');
 const answerLi = document.querySelector('.answer');
 
@@ -55,11 +56,16 @@ function playTone(index) {
     };
 }
 
-//ランダムボタン
-randomBtn?.addEventListener('click', () => {
+//ランダムに再生する関数
+function playRandom() {
     currentIndex = Math.floor(Math.random() * frequencies.length);
     if (answerLi) answerLi.textContent = "";
     playTone(currentIndex);
+}
+
+//ランダムボタン
+randomBtn?.addEventListener('click', () => {
+    playRandom;
 })
 
 // 再再生ボタン
@@ -75,6 +81,19 @@ againBtn?.addEventListener('click', () => {
 playCBtn?.addEventListener('click', () => {
     playTone(0); // 配列の0番目(C4)を鳴らす
 });
+
+autoToggle.addEventListener('change', (e) => {
+    if (e.target.checkd) {
+        intervalId  = setInterval(() => {
+            playRandom;
+        }, 1000);
+    } else {
+        if (intervalId) {
+            clearInterval(intervalId);
+            intervalId = null;
+        }
+    }
+})
 
 // 回答表示ボタン
 answerBtn?.addEventListener('click', () => {
