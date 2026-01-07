@@ -83,9 +83,9 @@ playCBtn?.addEventListener('click', () => {
 });
 
 autoToggle.addEventListener('change', (e) => {
-    if (e.target.checkd) {
+    if (e.target.checked) {
         intervalId  = setInterval(() => {
-            playRandom;
+            playRandom();
         }, 1000);
     } else {
         if (intervalId) {
