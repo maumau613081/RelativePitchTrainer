@@ -16,6 +16,7 @@ const pitches = ['C4(ド)', 'C4+50ct(ド+50ct)', 'C#4(ド#)', 'C#4+50ct(ド#+50c
 
 //変数
 let currentIndex = null;
+let intervalId = null;
 
 function playTone(index) {
     if (index < 0 || index >= frequencies.length) return;
@@ -65,7 +66,7 @@ function playRandom() {
 
 //ランダムボタン
 randomBtn?.addEventListener('click', () => {
-    playRandom;
+    playRandom();
 })
 
 // 再再生ボタン
