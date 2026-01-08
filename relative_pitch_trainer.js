@@ -33,7 +33,7 @@ function playTone(index) {
     //音量変化設定
     const now = audioCtx.currentTime;
     const volume = 0.2;
-    const duration = 1.0; 
+    const duration = 1.5; 
     const fade = 0.05;
 
     // 音の再生感
@@ -88,7 +88,7 @@ autoToggle.addEventListener('change', (e) => {
         intervalId  = setInterval(() => {
             playRandom();
             if (answerLi) answerLi.textContent = `答え : ${pitches[currentIndex]}`;
-        }, 1000);
+        }, 1500);
     } else {
         if (intervalId) {
             clearInterval(intervalId);
