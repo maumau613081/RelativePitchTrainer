@@ -87,6 +87,7 @@ autoToggle.addEventListener('change', (e) => {
     if (e.target.checked) {
         intervalId  = setInterval(() => {
             playRandom();
+            if (answerLi) answerLi.textContent = `答え : ${pitches[currentIndex]}`;
         }, 1000);
     } else {
         if (intervalId) {
