@@ -6,7 +6,7 @@ const audioCtx = new AudioContext();
 const randomBtn = document.getElementById('randomBtn');
 const againBtn = document.getElementById('againBtn');
 const playCBtn = document.getElementById('playCBtn');
-const autoToggle = document.getElementById('audoToggle')
+const autoToggle = document.getElementById('autoToggle')
 const answerBtn = document.getElementById('answerBtn');
 const answerLi = document.querySelector('.answer');
 
