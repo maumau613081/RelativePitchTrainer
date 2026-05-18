@@ -83,6 +83,11 @@ playCBtn?.addEventListener('click', () => {
     playTone(0); // 配列の0番目(C4)を鳴らす
 });
 
+//選択音再生ボタン
+playAnyBtn?.addEventListener('click', () => {
+    playTone(8);//
+})
+
 autoToggle.addEventListener('change', (e) => {
     if (e.target.checked) {
         intervalId  = setInterval(() => {
