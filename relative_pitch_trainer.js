@@ -102,7 +102,7 @@ autoToggle.addEventListener('change', (e) => {
     }
 })
 
-// 回答表示ボタン
+// 回答表示/非表示ボタン
 answerBtn?.addEventListener('click', () => {
     if (currentIndex === null) {
         alert("まずはランダムに音を再生してください。");
